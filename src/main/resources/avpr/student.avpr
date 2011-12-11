@@ -1,0 +1,9 @@
+{
+  "type": "record", 
+  "name": "Student",
+  "fields" : [
+    {"name": "StudentUniqueStateId", "type": "UniqueStateIdentifier"},            
+    {"name": "StudentIdentificationCode", "type": "array", "items": "StudentIdentificationCode"} 
+    }
+}
+	 
