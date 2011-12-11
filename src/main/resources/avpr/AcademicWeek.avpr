@@ -1,0 +1,3 @@
+//{"type":"record","name":"AcademicWeek","namespace":"edfi","fields":[{"name":"WeekIdentifier","type":"string"},{"name":"BeginDate","type":"string"},{"name":"EndDate","type":"string"},{"name":"TotalInstructionalDays","type":"string"},{"name":"CalendarDateReference","type":"string"}]}
+
+{"type":"record","name":"AcademicWeek","namespace":"edfi","fields":[{"name":"WeekIdentifier","type":"string"},{"name":"BeginDate","type":"string"},{"name":"EndDate","type":"string"},{"name":"TotalInstructionalDays","type":"string"},{"name":"CalendarDateReference","type":"string"}]}}

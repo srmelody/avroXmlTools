@@ -21,12 +21,13 @@ import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.XmlSchemaObjectTable;
 import org.apache.ws.commons.schema.XmlSchemaParticle;
 import org.apache.ws.commons.schema.XmlSchemaSequence;
+import org.apache.ws.commons.schema.XmlSchemaSimpleType;
 import org.apache.ws.commons.schema.XmlSchemaType;
 import org.apache.ws.commons.schema.utils.NamespacePrefixList;
 
 public class XsdConverter {
 
-	private Map map = new HashMap();
+	private Map<String, Schema> map = new HashMap<String, Schema>();
 	
 	
 	public void convert(InputStream is) {
@@ -52,7 +53,8 @@ public class XsdConverter {
 		XmlSchemaType schemaType = schema.getTypeByName("student");
 		XmlSchemaElement elem = schema.getElementByName("student");
 
-		System.out.println(schema);
+		//System.out.println(schema);
+		System.out.println( map );
 	}
 
 	private void handleComplexType(XmlSchemaComplexType i) {
@@ -61,6 +63,8 @@ public class XsdConverter {
 		System.out.println( name );
 		XmlSchemaParticle part = i.getParticle();
 		XmlSchemaContentModel model = i.getContentModel();
+		if ( model != null ) {
+		
 		XmlSchemaContent ext = model.getContent();
 
 		if (ext instanceof XmlSchemaComplexContentExtension) {
@@ -72,9 +76,9 @@ public class XsdConverter {
 				handleSequence( name, seq );
 				
 			}
-			System.out.println(part2);
+			//System.out.println(part2);
 		}
-
+		}
 	}
 
 	private void handleSequence(String name, XmlSchemaSequence seq) {
@@ -88,18 +92,39 @@ public class XsdConverter {
 			XmlSchemaElement elem = (XmlSchemaElement) obj;
 			String type = determineType ( elem );
 			//schema.addProp(elem.getName(), type );
-			Field field = new Field(elem.getName(), schema, type, null );
+		
+			Schema schemaField = Schema.create(Schema.Type.STRING  );
+			
+			Field field = new Field(elem.getName(), schemaField, null, null );
 			fields.add( field );
 			System.out.println( obj );
 			
 		}
 		schema.setFields(fields);
 		System.out.println( "Schema: " + schema );
+		map.put( schema.getName(), schema );
 //Schema schema = Schema.createRecord(fields);
 	}
 
 	private String determineType(XmlSchemaElement elem) {
 		String type = "string";
+		XmlSchemaType sType = elem.getSchemaType();
+		if ( sType instanceof XmlSchemaSimpleType ) {
+			XmlSchemaSimpleType simple = (XmlSchemaSimpleType) sType;
+			String name = simple.getName();
+			type = simple.getName();
+		}
+		else if ( sType instanceof XmlSchemaComplexType ) {
+			XmlSchemaComplexType cType = (XmlSchemaComplexType) sType;
+			String name = cType.getName();
+			if ( name.equals( "ReferenceType" ) ) {
+				// Use the element name instead.
+				type = elem.getName();
+				int n = type.indexOf( "Reference" );
+				type = type.substring( 0, n );
+			}
+			System.out.println( "Complex: " + name );
+		}
 		if ( elem.getElementType() != null ) {
 			type = elem.getElementType().toString();
 		}

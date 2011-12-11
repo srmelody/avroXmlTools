@@ -1,24 +1,11 @@
 package org.apache.avro;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
-import javax.xml.transform.stream.StreamSource;
-
-import org.apache.ws.commons.schema.XmlSchema;
-import org.apache.ws.commons.schema.XmlSchemaCollection;
-import org.apache.ws.commons.schema.XmlSchemaComplexContent;
-import org.apache.ws.commons.schema.XmlSchemaComplexContentExtension;
-import org.apache.ws.commons.schema.XmlSchemaComplexType;
-import org.apache.ws.commons.schema.XmlSchemaContent;
-import org.apache.ws.commons.schema.XmlSchemaContentModel;
-import org.apache.ws.commons.schema.XmlSchemaElement;
-import org.apache.ws.commons.schema.XmlSchemaObject;
-import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
-import org.apache.ws.commons.schema.XmlSchemaObjectTable;
-import org.apache.ws.commons.schema.XmlSchemaParticle;
-import org.apache.ws.commons.schema.XmlSchemaType;
-import org.apache.ws.commons.schema.utils.NamespacePrefixList;
+import org.apache.avro.compiler.specific.SpecificCompiler;
 import org.junit.Test;
 
 public class ConversionTest {
@@ -26,11 +13,18 @@ public class ConversionTest {
 	@Test
 	public void testXSD() throws Exception {
 
-		String fileName = "src/main/resources/Ed-Fi-Core.xsd";
+		String fileName = "src/main/resources/AcademicWeek.xsd";
 
 		InputStream is = new FileInputStream(fileName);
 		XsdConverter c = new XsdConverter();
 		c.convert( is );
 		}
 
+	@Test
+	public void generate() throws IOException {
+		
+		// Template directory is configurable - record.vm in templates is what is being used.
+		
+		SpecificCompiler.compileSchema(new File("src/main/resources/avpr/AcademicWeek.avpr"), new File("src/main/resources/avro/generated/"));
+	}
 }

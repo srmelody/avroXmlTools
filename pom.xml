@@ -10,7 +10,11 @@
 	<artifactId>avro</artifactId>
 	<version>1.6.1</version>
   </dependency>
-  
+    <dependency>
+	<groupId>org.apache.avro</groupId>
+	<artifactId>avro-compiler</artifactId>
+	<version>1.6.1</version>
+  </dependency>
   <dependency>
 	<groupId>junit</groupId>
 	<artifactId>junit</artifactId>
